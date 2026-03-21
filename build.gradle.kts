@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("com.gradleup.shadow") version "8.3.6"
 }
 
 group = "de.idiotischer"
@@ -19,4 +20,18 @@ dependencies {
     implementation("de.craftsblock.craftscore:event")
     implementation("com.google.code.gson:gson:2.13.2")
     implementation(project(":shared"))
+}
+
+tasks.shadowJar {
+    // Only embed shared classes
+    configurations = listOf(project.configurations.getByName("runtimeClasspath"))
+    dependencies {
+        include(project(":shared"))
+    }
+    archiveClassifier.set("")
+    archiveBaseName.set("BOB-main")
+}
+
+tasks.jar {
+    enabled = false
 }
