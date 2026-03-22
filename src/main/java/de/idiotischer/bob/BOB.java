@@ -53,6 +53,7 @@ public class BOB {
         BOB.instance = this;
 
         FileUtil.replaceIfNotExistingAsync(this.getClass().getClassLoader()).join();
+
         init();
     }
 
