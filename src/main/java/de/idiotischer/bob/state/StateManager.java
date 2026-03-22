@@ -4,11 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import de.idiotischer.bob.BOB;
+import de.idiotischer.bob.SharedCore;
 import de.idiotischer.bob.country.Country;
 import de.idiotischer.bob.map.FloodFill;
 
 import java.awt.*;
 import java.io.FileReader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
@@ -18,7 +20,7 @@ public class StateManager {
 
     private final Set<State> stateSet = new HashSet<>();
 
-    //MUSS nach Countries initialisiert werden sonst BOOM
+    //MUSS nach CountryManager initialisiert werden sonst BOOM
     public StateManager() {
         reload();
     }
@@ -26,10 +28,8 @@ public class StateManager {
     private void reload() {
         stateSet.clear();
 
-        Path path = BOB.getInstance().getScenarioSceneLoader().getScenariopath();
-
-        try (JsonReader reader = new JsonReader(new FileReader(path.resolve("states.json").toFile()))) {
-            JsonElement root = BOB.getInstance().getScenarioSceneLoader().getGson().fromJson(reader, JsonElement.class);
+        try (JsonReader reader = new JsonReader(Files.newBufferedReader(BOB.getInstance().getScenarioSceneLoader().getCurrentScenario().getStatesConfig()))) {
+            JsonElement root = SharedCore.GSON.fromJson(reader, JsonElement.class);
 
             root.getAsJsonObject().entrySet().forEach(entry -> {
                 String abbreviation = entry.getKey();
@@ -78,7 +78,7 @@ public class StateManager {
     }
 
     public State getStateAt(int x, int y) {
-        List<Point> points = FloodFill.getPossiblePos(BOB.getInstance().getMapRenderer().getPanel().getFrame(), x, y);
+        List<Point> points = FloodFill.getPossiblePos(BOB.getInstance().getMapRenderer().getGamePanel().getFrame(), x, y);
         Map<Point, State> statePoints = getStateSet().stream().collect(Collectors.toMap(s -> new Point(s.getX(), s.getY()), s -> s));
 
         Optional<Point> point = points.stream().filter(statePoints::containsKey).findFirst();
