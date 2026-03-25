@@ -3,6 +3,7 @@ package de.idiotischer.bob.render.menu.components;
 import de.idiotischer.bob.BOB;
 import de.idiotischer.bob.render.menu.Component;
 import de.idiotischer.bob.render.menu.components.button.ButtonComp;
+import de.idiotischer.bob.render.menu.components.button.IButtonComp;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,11 +42,12 @@ public class ScrollContainer implements Component {
         layoutChildren();
     }
 
+    //IMPORTANT BC THIS MODIFIES THE RECTANGLE
     private void layoutChildren() {
         int yOffset = padding;
 
         for (Component child : children) {
-            if (child instanceof ButtonComp btn) {
+            if (child instanceof IButtonComp btn) {
                 Rectangle b = btn.getBounds();
                 b.y += yOffset - scrollOffset;
                 yOffset += b.height + spacing;
@@ -55,57 +57,54 @@ public class ScrollContainer implements Component {
 
     @Override
     public void paint(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        try {
-            JPanel pl = panel != null ? panel : BOB.getInstance().getMainRenderer().getGamePanel();
+        Graphics2D g2 = (Graphics2D) g;
 
-            Rectangle bounds = getActualBounds();
+        JPanel pl = panel != null ? panel : BOB.getInstance().getMainRenderer().getGamePanel();
 
-            int x = centered ? (pl.getWidth() - bounds.width) / 2 : bounds.x;
-            int y = centered ? (pl.getHeight() - bounds.height) / 2 : bounds.y;
+        Rectangle bounds = getActualBounds();
 
-            g2.setColor(Color.WHITE);
-            g2.setStroke(new BasicStroke(3));
-            g2.drawRoundRect(x, y, bounds.width, bounds.height, 24, 24);
+        int x = centered ? (pl.getWidth() - bounds.width) / 2 : bounds.x;
+        int y = centered ? (pl.getHeight() - bounds.height) / 2 : bounds.y;
 
-            g2.setClip(x, y, bounds.width, bounds.height);
+        g2.setColor(Color.WHITE);
+        g2.setStroke(new BasicStroke(3));
+        g2.drawRoundRect(x, y, bounds.width, bounds.height, 24, 24);
 
-            //this will be the image container btu i am too stupdi so i just copied the scrollabr xD
-            int heightShrink = 40;
+        g2.setClip(x, y, bounds.width, bounds.height);
 
-            int imgFrameWidth = 350;
-            int frameX = x + bounds.width - imgFrameWidth - 2;
-            int bufferX = heightShrink / 2;
+        //this will be the image container btu i am too stupdi so i just copied the scrollabr xD
+        int heightShrink = 40;
 
-            g2.drawRoundRect(
-                    frameX - bufferX,
-                    y + (heightShrink / 2),
-                    imgFrameWidth,
-                    bounds.height - heightShrink,
-                    24,
-                    24
-            );
+        int imgFrameWidth = 350;
+        int frameX = x + bounds.width - imgFrameWidth - 2;
+        int bufferX = heightShrink / 2;
 
-            //scrollbar ykyk
-            int barX = x + (bounds.width / 2) - scrollbarWidth - 2;
+        g2.drawRoundRect(
+                frameX - bufferX,
+                y + (heightShrink / 2),
+                imgFrameWidth,
+                bounds.height - heightShrink,
+                24,
+                24
+        );
 
-            this.scrollBounds = new Rectangle(barX - 15, y + (heightShrink / 2), scrollbarWidth, bounds.height - heightShrink);
+        //scrollbar ykyk
+        int barX = x + (bounds.width / 2) - scrollbarWidth - 2;
 
-            g2.drawRoundRect(
-                    scrollBounds.x,
-                    scrollBounds.y,
-                    scrollbarWidth,
-                    bounds.height - heightShrink,
-                    12,
-                    12
-            );
+        this.scrollBounds = new Rectangle(barX - 15, y + (heightShrink / 2), scrollbarWidth, bounds.height - heightShrink);
 
-            for (ButtonComp child : children) {
-                child.setDebug(true);
-                child.paint(g2);
-            }
-        } finally {
-            g2.dispose();
+        g2.drawRoundRect(
+                scrollBounds.x,
+                scrollBounds.y,
+                scrollbarWidth,
+                bounds.height - heightShrink,
+                12,
+                12
+        );
+
+        for (ButtonComp child : children) {
+            //child.setDebug(true);
+            child.paint(g2);
         }
     }
 

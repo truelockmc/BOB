@@ -3,11 +3,12 @@ package de.idiotischer.bob.render.menu.components.button;
 import it.unimi.dsi.fastutil.Pair;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
 public class ButtonGroup {
-    private final Set<IButtonComp> buttons = new HashSet<>();
+    private Set<IButtonComp> buttons = new HashSet<>();
     private final Consumer<Pair<IButtonComp, IButtonComp>> onSelect;
     private IButtonComp selectedButton = null;
 
@@ -17,6 +18,10 @@ public class ButtonGroup {
 
     public ButtonGroup(Consumer<Pair<IButtonComp, IButtonComp>> selected) {
         this.onSelect = selected;
+    }
+
+    public void set(List<IButtonComp> bs) {
+        this.buttons = new HashSet<>(bs);
     }
 
     public void add(IButtonComp button) {
@@ -37,6 +42,10 @@ public class ButtonGroup {
         }
 
         if(onSelect != null) onSelect.accept(Pair.of(selectedButton, old));
+    }
+
+    public void clear() {
+        buttons.clear();
     }
 
     public IButtonComp getSelected() {

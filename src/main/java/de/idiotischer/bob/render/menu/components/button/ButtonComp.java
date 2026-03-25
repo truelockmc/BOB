@@ -11,7 +11,7 @@ public class ButtonComp implements IButtonComp {
     private final String text;
     private final String id;
     private final Color selectedColor;
-    private final ButtonGroup group;
+    private ButtonGroup group;
 
     private Rectangle bounds;
     private final Color bgColor;
@@ -192,6 +192,11 @@ public class ButtonComp implements IButtonComp {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public void setGroup(ButtonGroup group) {
+        this.group = group;
     }
 
     public void setDebug(boolean debug) {

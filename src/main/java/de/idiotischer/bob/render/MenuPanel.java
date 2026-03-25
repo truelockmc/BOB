@@ -1,5 +1,6 @@
 package de.idiotischer.bob.render;
 
+import de.idiotischer.bob.BOB;
 import de.idiotischer.bob.render.menu.Menu;
 import de.idiotischer.bob.render.menu.Panel;
 import de.idiotischer.bob.render.menu.impl.select.ScenarioSelectMenu;
@@ -24,17 +25,19 @@ public class MenuPanel extends JPanel implements Panel {
 
     private boolean scenarioSelect = false;
 
-    private final SelectMenu scenarioSelectMenu;
+    private SelectMenu scenarioSelectMenu;
     private final StartMenu startMenu;
 
     private final List<Menu> menuList = new ArrayList<>();
+
+    boolean wasSelectBefore = false;
 
     public MenuPanel(BufferedImage map, MainRenderer renderer) {
         setFrame(map);
 
         this.renderer = renderer;
 
-        this.scenarioSelectMenu = new ScenarioSelectMenu(this, layoutScaleX, layoutScaleY); //Oder später eben countryselect
+        this.scenarioSelectMenu = new ScenarioSelectMenu(BOB.getInstance().getScenarioSceneLoader().getCurrentScenario(),this, layoutScaleX, layoutScaleY); //Oder später eben countryselect
         this.startMenu = new StartMenu(this);
 
         this.menuList.add(scenarioSelectMenu);
@@ -73,11 +76,16 @@ public class MenuPanel extends JPanel implements Panel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if(scenarioSelect) {
+            if(!wasSelectBefore) {
+                this.scenarioSelectMenu =  new ScenarioSelectMenu(BOB.getInstance().getScenarioSceneLoader().getCurrentScenario(),this, layoutScaleX, layoutScaleY);
+            }
+
             scenarioSelectMenu.paint(g2);
+            wasSelectBefore = true;
         } else {
+            wasSelectBefore = false;
             startMenu.paint(g2);
         }
-
     }
 
     private void handleZoom(Graphics2D g2) {
@@ -160,4 +168,15 @@ public class MenuPanel extends JPanel implements Panel {
         }
     }
 
+    public void setScenarioSelect(boolean scenarioSelect) {
+        this.scenarioSelect = scenarioSelect;
+    }
+
+    public void setWasSelectBefore(boolean wasSelectBefore) {
+        this.wasSelectBefore = wasSelectBefore;
+    }
+
+    public void setScenarioSelectMenu(SelectMenu scenarioSelectMenu) {
+        this.scenarioSelectMenu = scenarioSelectMenu;
+    }
 }

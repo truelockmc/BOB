@@ -69,6 +69,10 @@ public class CountryManager {
         return Country.fromColor(new Color(red, green, blue));
     }
 
+    public Country getCountry(String abbreviation) {
+        return countrySet.stream().filter(c -> c.getAbbreviation().equals(abbreviation)).findFirst().orElse(null);
+    }
+
     public List<State> getControlled(Country country) {
         if(BOB.getInstance().getStateManager() == null) return List.of();
         return BOB.getInstance().getStateManager().getStateSet().stream().filter(s -> s.getController() == country).toList();
