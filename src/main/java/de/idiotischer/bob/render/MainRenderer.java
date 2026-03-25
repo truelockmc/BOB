@@ -363,7 +363,9 @@ public class MainRenderer extends Thread {
         int dy = 0;
         int speed = 5;
 
-        if(keysPressed.contains(KeyEvent.VK_SHIFT)) speed += 5;
+        speed += (int) (zoom / 0.95); //damit schneller wenn näher
+
+        if(keysPressed.contains(KeyEvent.VK_SHIFT)) speed += 7;
 
         if(keysPressed.contains(KeyEvent.VK_W) || keysPressed.contains(KeyEvent.VK_UP)) dy -= speed;
         if(keysPressed.contains(KeyEvent.VK_S) || keysPressed.contains(KeyEvent.VK_DOWN)) dy += speed;
