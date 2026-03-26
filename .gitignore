@@ -5,6 +5,12 @@ build/
 !**/src/test/**/build/
 .kotlin
 
+#compiled jar started stuff
+config/
+icons/
+mapBase/
+scenario/
+
 .idea
 
 #dont push anything from run except the start.sh

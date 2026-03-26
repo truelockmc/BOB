@@ -13,12 +13,12 @@ import de.idiotischer.bob.state.StateManager;
 import de.idiotischer.bob.troop.TroopManager;
 import de.idiotischer.bob.util.FileUtil;
 import de.idiotischer.bob.util.MainConfigUtil;
-
-import javax.swing.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.swing.*;
 
 public class BOB {
+
     private static BOB instance;
 
     private CountryManager countries;
@@ -31,7 +31,8 @@ public class BOB {
 
     private Debugger debugger;
 
-    private final ScenarioSceneLoader scenarioSceneLoader = new ScenarioSceneLoader();
+    private final ScenarioSceneLoader scenarioSceneLoader =
+        new ScenarioSceneLoader();
 
     private ClientSocket client;
 
@@ -46,14 +47,16 @@ public class BOB {
     private boolean isHost = false;
     private TroopManager troopManager;
 
-    static void main() {
+    public static void main(String[] args) {
         new BOB();
     }
 
     public BOB() {
         BOB.instance = this;
 
-        FileUtil.replaceIfNotExistingAsync(this.getClass().getClassLoader()).join();
+        FileUtil.replaceIfNotExistingAsync(
+            this.getClass().getClassLoader()
+        ).join();
 
         init();
     }
@@ -97,6 +100,7 @@ public class BOB {
 
         return new ImageIcon(imgURL);
     }
+
     public CountryManager getCountries() {
         return countries;
     }
@@ -108,7 +112,6 @@ public class BOB {
     public MainRenderer getMainRenderer() {
         return mapRenderer;
     }
-
 
     public ScenarioSceneLoader getScenarioSceneLoader() {
         return scenarioSceneLoader;

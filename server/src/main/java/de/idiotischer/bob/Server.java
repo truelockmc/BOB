@@ -5,19 +5,22 @@ import de.idiotischer.bob.networking.communication.SendTool;
 import de.idiotischer.bob.util.FileUtil;
 
 public class Server {
+
     private static Server instance;
     private final SharedCore core = new SharedCore();
     private SendTool sendTool;
     private ServerSocket serverSocket;
 
-    static void main() {
+    public static void main(String[] args) {
         new Server();
     }
 
     public Server() {
         instance = this;
 
-        FileUtil.replaceIfNotExistingAsync(this.getClass().getClassLoader()).join();
+        FileUtil.replaceIfNotExistingAsync(
+            this.getClass().getClassLoader()
+        ).join();
 
         registerListeners();
 

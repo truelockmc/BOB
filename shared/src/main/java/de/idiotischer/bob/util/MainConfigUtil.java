@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import de.idiotischer.bob.SharedCore;
-
 import java.nio.file.Files;
 
 public class MainConfigUtil {
@@ -17,17 +16,31 @@ public class MainConfigUtil {
     }
 
     public void reload() {
-        try (JsonReader reader = new JsonReader(Files.newBufferedReader(FileUtil.getDefaultConfig()))) {
-            JsonElement root = SharedCore.GSON.fromJson(reader, JsonElement.class);
+        try (
+            JsonReader reader = new JsonReader(
+                Files.newBufferedReader(FileUtil.getDefaultConfig())
+            )
+        ) {
+            JsonElement root = SharedCore.GSON.fromJson(
+                reader,
+                JsonElement.class
+            );
 
-            if (!root.isJsonObject()) {
-                throw new IllegalStateException("Config root is not a JSON object!");
+            if (root == null || !root.isJsonObject()) {
+                throw new IllegalStateException(
+                    "Config root is not a JSON object!"
+                );
             }
 
             JsonObject obj = root.getAsJsonObject();
 
-            if (obj.has("replaceIfNotExisting") && !obj.get("replaceIfNotExisting").isJsonNull()) {
-                this.replaceIfNotExisting = obj.get("replaceIfNotExisting").getAsBoolean();
+            if (
+                obj.has("replaceIfNotExisting") &&
+                !obj.get("replaceIfNotExisting").isJsonNull()
+            ) {
+                this.replaceIfNotExisting = obj
+                    .get("replaceIfNotExisting")
+                    .getAsBoolean();
             } else {
                 this.replaceIfNotExisting = false;
             }
@@ -37,11 +50,11 @@ public class MainConfigUtil {
             } else {
                 this.isDebug = false;
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public boolean isDebug() {
         return isDebug;
     }
