@@ -224,6 +224,22 @@ public class FileUtil {
         return flagsDir;
     }
 
+    public static Path getCoatsDir() {
+        Path flagsDir = getJarDir().toAbsolutePath().resolve("icons/");
+
+        if(Files.notExists(flagsDir)) {
+            try {
+                Files.createDirectory(flagsDir);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return flagsDir;
+    }
+
+    /* WIP */
+    @ApiStatus.Experimental
     public static Path getCountryFlagsDir(String abbreviation) {
         Path countryFlagsDir = getFlagsDir().resolve(abbreviation);
 
@@ -236,6 +252,27 @@ public class FileUtil {
         }
 
         return countryFlagsDir;
+    }
+
+    /* WIP */
+    @ApiStatus.Experimental
+    public static Path getCoat(String abbreviation) {
+        Path countryFlagsDir = getCoatsDir().resolve(abbreviation);
+
+        return countryFlagsDir.resolve(abbreviation + ".png");
+    }
+
+    /* WIP */
+    @ApiStatus.Experimental
+    public static Path getCoat(String abbreviation, String flagAbbreviation) {
+        Path countryFlagsDir = getFlagsDir().resolve(abbreviation);
+        Path flag = countryFlagsDir.resolve(abbreviation + "_" + flagAbbreviation + ".png");
+
+        if(Files.notExists(flag)) {
+            flag = getFlag(abbreviation);
+        }
+
+        return flag;
     }
 
     public static Path getFlag(String abbreviation) {

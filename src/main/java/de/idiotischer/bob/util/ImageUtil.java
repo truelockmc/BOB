@@ -1,11 +1,10 @@
 package de.idiotischer.bob.util;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
-public class RenderUtil {
+public class ImageUtil {
     public static BufferedImage makeRoundedCorner(Image image, int width, int height, int cornerRadius) {
         BufferedImage output = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = output.createGraphics();
@@ -47,29 +46,27 @@ public class RenderUtil {
     }
 
 
-    // THESE WORK
-
-    public static int scaleUniform(JPanel p, int designW, int designH, int value) {
-        double scaleX = (double) p.getWidth() / designW;
-        double scaleY = (double) p.getHeight() / designH;
-        return (int) (value * Math.min(scaleX, scaleY));
-    }
-
-    public static int scaleUniformWidth(JPanel p, int designW, int designH, int originalWidth) {
-        double scaleX = (double) p.getWidth() / designW;
-        double scaleY = (double) p.getHeight() / designH;
-        double scale = Math.min(scaleX, scaleY);
-
-        return (int) (originalWidth * scale);
-    }
-
-    public static int scaleUniformHeight(JPanel p, int designW, int designH, int originalHeight) {
-        double scaleX = (double) p.getWidth() / designW;
-        double scaleY = (double) p.getHeight() / designH;
-        double scale = Math.min(scaleX, scaleY);
-
-        return (int) (originalHeight * scale);
-    }
+    //public static int scaleUniform(JPanel p, int designW, int designH, int value) {
+    //    double scaleX = (double) p.getWidth() / designW;
+    //    double scaleY = (double) p.getHeight() / designH;
+    //    return (int) (value * Math.min(scaleX, scaleY));
+    //}
+//
+    //public static int scaleUniformWidth(JPanel p, int designW, int designH, int originalWidth) {
+    //    double scaleX = (double) p.getWidth() / designW;
+    //    double scaleY = (double) p.getHeight() / designH;
+    //    double scale = Math.min(scaleX, scaleY);
+//
+    //    return (int) (originalWidth * scale);
+    //}
+//
+    //public static int scaleUniformHeight(JPanel p, int designW, int designH, int originalHeight) {
+    //    double scaleX = (double) p.getWidth() / designW;
+    //    double scaleY = (double) p.getHeight() / designH;
+    //    double scale = Math.min(scaleX, scaleY);
+//
+    //    return (int) (originalHeight * scale);
+    //}
 
 
     //private static final int BASE_WIDTH = 1920;

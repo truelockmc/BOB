@@ -8,6 +8,7 @@ import de.idiotischer.bob.render.menu.Panel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -402,6 +403,28 @@ public class MainRenderer extends Thread {
         g.dispose();
 
         return frameBuffer;
+    }
+
+    //TODO: fix everything
+    public AffineTransform getViewportTransform() {
+        AffineTransform at = new AffineTransform();
+
+        if (!inMenu) {
+            //at.translate(-offsetX, -offsetY);
+            //at.scale(zoom, zoom);
+            at.translate(0, 0);
+            at.scale(1, 1);
+        } else {
+            //TODO: check this ig
+            //double menuZoom = getMinZoom();
+
+            //double centeredX = (menuPanel.getWidth() - map.getWidth()) / 2.0;
+            //double centeredY = (menuPanel.getHeight() - map.getHeight()) / 2.0;
+
+            at.translate(0, 0);
+            at.scale(1, 1);
+        }
+        return at;
     }
 
     //private void render(BufferedImage map) {

@@ -3,6 +3,7 @@ package de.idiotischer.bob.render.menu.impl.select;
 import de.idiotischer.bob.BOB;
 import de.idiotischer.bob.country.Country;
 import de.idiotischer.bob.render.menu.Component;
+import de.idiotischer.bob.render.menu.components.ScrollContainer;
 import de.idiotischer.bob.render.menu.components.button.*;
 import de.idiotischer.bob.render.menu.components.button.ButtonGroup;
 import de.idiotischer.bob.scenario.Scenario;
@@ -16,8 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+
+//TODO: maybe add a select by clickign on map or smth
+//TODO: add "view other" menu wich show the scroller with all buttons (looks better)
 public class CountrySelectMenu extends SelectMenu {
 
+    private final ScrollContainer scroller;
     private Scenario selectedScenario;
     private Country selectedCountry;
 
@@ -67,6 +72,16 @@ public class CountrySelectMenu extends SelectMenu {
 
         this.selectedScenario = selected;
 
+        scroller = new ScrollContainer(panel, new Color(200, 200, 200, 180), true, true);
+
+        int x = parent.getWidth() / 2 - (layoutScaleX / 2) + 20;
+        int y = parent.getHeight() / 2 - (layoutScaleY / 2) + 20;
+        int width = layoutScaleX - 40;
+        int height = layoutScaleY - 40;
+
+        scroller.setBounds(new Rectangle(x, y, width, height-250));
+        scroller.setCenteredYOffset(-115);
+
         other.add(startButton);
         other.add(backMenuButton);
         other.add(backButton);
@@ -91,6 +106,38 @@ public class CountrySelectMenu extends SelectMenu {
             iButtonComps.add(createButton());
         }
 
+        reloadRow();
+        reloadScroll();
+    }
+
+    public void reloadScroll() {
+        List<Country> cs = new ArrayList<>(BOB.getInstance().getCountries().getCountrySet());
+        cs.removeAll(BOB.getInstance().getCountries().getOnSelectScreen());
+
+        List<ButtonComp> buttons = new ArrayList<>();
+        for (Country s : cs) {
+            //TODO: make it so i dont need to trial and error with these values (bs but gonna leave this todo in anyways)
+            ButtonComp b = new ButtonComp(
+                    s.getAbbreviation(),
+                    s.countryName(),
+                    Color.WHITE,
+                    Color.BLACK,
+                    false,
+                    25, 0,
+                    300, 40,
+                    16, 16,
+                    3, Color.LIGHT_GRAY,
+                    Color.DARK_GRAY,
+                    false, buttonGroup, (ignored) -> {});
+
+            b.setPanel(parent);
+            buttons.add(b);
+        }
+
+        scroller.setChildren(new ArrayList<>(buttons));
+    }
+
+    public void reloadRow() {
         List<Country> cs = BOB.getInstance().getCountries().getOnSelectScreen();
 
         int limit = Math.min(iButtonComps.size(), cs.size());
@@ -123,6 +170,7 @@ public class CountrySelectMenu extends SelectMenu {
         buttonGroup.set(iButtonComps);
 
         if (row == null) row = new ButtonRow(this.parent, Color.WHITE, true);
+
         row.setSpacing(10);
 
         row.setChildren(iButtonComps);
@@ -174,6 +222,8 @@ public class CountrySelectMenu extends SelectMenu {
 
         row.paint(g2);
 
+        scroller.paint(g);
+
         other.forEach(component -> {
             if (component instanceof IButtonComp c) {
                 c.setPanel(parent);
@@ -185,24 +235,28 @@ public class CountrySelectMenu extends SelectMenu {
     @Override
     public void mouseClick(MouseEvent e, int x, int y) {
         row.mouseClick(e, x, y);
+        scroller.mouseClick(e, x, y);
         other.forEach(component -> component.mouseClick(e, x, y));
     }
 
     @Override
     public void mouseRelease(MouseEvent e, int x, int y) {
         row.mouseRelease(e, x, y);
+        scroller.mouseRelease(e, x, y);
         other.forEach(component -> component.mouseRelease(e, x, y));
     }
 
     @Override
     public void mouseMove(MouseEvent e, int x, int y) {
         row.mouseMove(e, x, y);
+        scroller.mouseMove(e, x, y);
         other.forEach(component -> component.mouseMove(e, x, y));
     }
 
     @Override
     public void mouseScroll(MouseWheelEvent e, int x, int y) {
         row.mouseScroll(e, x, y);
+        scroller.mouseScroll(e, x, y);
         other.forEach(component -> component.mouseScroll(e, x, y));
     }
 
