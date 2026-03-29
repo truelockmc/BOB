@@ -26,6 +26,43 @@ public class FileUtil {
         }
     }
 
+    /**
+     * Returns a writable data directory for the application.
+     *
+     * When running inside an AppImage the filesystem is read-only, so we follow
+     * the XDG Base Directory spec and write to ~/.local/share/BOB/ instead.
+     * The AppImage runtime always sets the APPIMAGE environment variable, which
+     * we use as the detection signal.
+     *
+     * In all other cases (plain JAR, IDE, Windows) we keep the original
+     * behaviour and use the directory next to the JAR.
+     */
+    public static Path getDataDir() {
+        boolean insideAppImage = System.getenv("APPIMAGE") != null;
+
+        if (!insideAppImage) {
+            // Plain JAR / IDE / Windows original behaviour
+            return getJarDir().toAbsolutePath();
+        }
+
+        // Running inside AppImage, filesystem is read-only, use XDG dir
+        String xdgDataHome = System.getenv("XDG_DATA_HOME");
+        Path base = (xdgDataHome != null && !xdgDataHome.isBlank())
+            ? Path.of(xdgDataHome)
+            : Path.of(System.getProperty("user.home"), ".local", "share");
+
+        Path dataDir = base.resolve("BOB");
+        try {
+            Files.createDirectories(dataDir);
+        } catch (IOException e) {
+            throw new RuntimeException(
+                "Could not create data directory: " + dataDir,
+                e
+            );
+        }
+        return dataDir;
+    }
+
     public static CompletableFuture<Void> replaceIfNotExistingAsync(
         ClassLoader resourceRoot
     ) {
@@ -65,7 +102,8 @@ public class FileUtil {
                 !resourceName.endsWith(".class") &&
                 !resourceName.startsWith("META-INF/")
             ) {
-                Path destination = getJarDir().resolve(resourceName);
+                // Extract to the writable data directory, not next to the JAR
+                Path destination = getDataDir().resolve(resourceName);
 
                 try {
                     if (Files.notExists(destination)) {
@@ -96,15 +134,15 @@ public class FileUtil {
 
     @ApiStatus.Obsolete
     public static Path getRunningDir() {
-        return getJarDir().toAbsolutePath();
+        return getDataDir();
     }
 
     public static Path getConfigDir() {
-        Path configDir = getJarDir().toAbsolutePath().resolve("config/");
+        Path configDir = getDataDir().resolve("config/");
 
         if (Files.notExists(configDir)) {
             try {
-                Files.createDirectory(configDir);
+                Files.createDirectories(configDir);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -114,11 +152,11 @@ public class FileUtil {
     }
 
     public static Path getScenarioDir() {
-        Path scenarioDir = getJarDir().toAbsolutePath().resolve("scenario/");
+        Path scenarioDir = getDataDir().resolve("scenario/");
 
         if (Files.notExists(scenarioDir)) {
             try {
-                Files.createDirectory(scenarioDir);
+                Files.createDirectories(scenarioDir);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -132,36 +170,7 @@ public class FileUtil {
 
         if (Files.notExists(scenarioDir)) {
             try {
-                Files.createDirectory(scenarioDir);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        return scenarioDir;
-    }
-
-    public static Path getDefaultScenarioDir() {
-        Path scenarioDir = getScenarioDir().resolve("default/");
-
-        if (Files.notExists(scenarioDir)) {
-            try {
-                Files.createDirectory(scenarioDir);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        return scenarioDir;
-    }
-
-    public static Path getIconPath() {
-        Path scenarioDir = getRunningDir();
-
-        //TODO: check this ig
-        if (Files.notExists(scenarioDir)) {
-            try {
-                Files.createFile(scenarioDir);
+                Files.createDirectories(scenarioDir);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -182,6 +191,35 @@ public class FileUtil {
         }
     }
 
+    public static Path getDefaultScenarioDir() {
+        Path scenarioDir = getScenarioDir().resolve("default/");
+
+        if (Files.notExists(scenarioDir)) {
+            try {
+                Files.createDirectories(scenarioDir);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return scenarioDir;
+    }
+
+    public static Path getIconPath() {
+        Path iconsDir = getDataDir();
+
+        //TODO: check this ig
+        if (Files.notExists(iconsDir)) {
+            try {
+                Files.createDirectories(iconsDir);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return iconsDir;
+    }
+
     public static Path getDefaultConfig() {
         Path configPath = getConfigDir().resolve("config.json");
 
@@ -197,25 +235,25 @@ public class FileUtil {
     }
 
     public static Path getHostConfig() {
-        Path scenarioDir = getJarDir()
-            .toAbsolutePath()
-            .resolve("config/host.json");
-        if (Files.notExists(scenarioDir)) {
+        Path hostConfig = getConfigDir().resolve("host.json");
+
+        if (Files.notExists(hostConfig)) {
             try {
-                Files.createFile(scenarioDir);
+                Files.createFile(hostConfig);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-        return scenarioDir;
+
+        return hostConfig;
     }
 
     public static Path getFlagsDir() {
-        Path flagsDir = getJarDir().toAbsolutePath().resolve("flags/");
+        Path flagsDir = getDataDir().resolve("flags/");
 
-        if(Files.notExists(flagsDir)) {
+        if (Files.notExists(flagsDir)) {
             try {
-                Files.createDirectory(flagsDir);
+                Files.createDirectories(flagsDir);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -225,17 +263,17 @@ public class FileUtil {
     }
 
     public static Path getCoatsDir() {
-        Path flagsDir = getJarDir().toAbsolutePath().resolve("icons/");
+        Path iconsDir = getDataDir().resolve("icons/");
 
-        if(Files.notExists(flagsDir)) {
+        if (Files.notExists(iconsDir)) {
             try {
-                Files.createDirectory(flagsDir);
+                Files.createDirectories(iconsDir);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
-        return flagsDir;
+        return iconsDir;
     }
 
     /* WIP */
@@ -243,9 +281,9 @@ public class FileUtil {
     public static Path getCountryFlagsDir(String abbreviation) {
         Path countryFlagsDir = getFlagsDir().resolve(abbreviation);
 
-        if(Files.notExists(countryFlagsDir)) {
+        if (Files.notExists(countryFlagsDir)) {
             try {
-                Files.createDirectory(countryFlagsDir);
+                Files.createDirectories(countryFlagsDir);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -258,7 +296,6 @@ public class FileUtil {
     @ApiStatus.Experimental
     public static Path getCoat(String abbreviation) {
         Path countryFlagsDir = getCoatsDir().resolve(abbreviation);
-
         return countryFlagsDir.resolve(abbreviation + ".png");
     }
 
@@ -266,9 +303,11 @@ public class FileUtil {
     @ApiStatus.Experimental
     public static Path getCoat(String abbreviation, String flagAbbreviation) {
         Path countryFlagsDir = getFlagsDir().resolve(abbreviation);
-        Path flag = countryFlagsDir.resolve(abbreviation + "_" + flagAbbreviation + ".png");
+        Path flag = countryFlagsDir.resolve(
+            abbreviation + "_" + flagAbbreviation + ".png"
+        );
 
-        if(Files.notExists(flag)) {
+        if (Files.notExists(flag)) {
             flag = getFlag(abbreviation);
         }
 
@@ -277,16 +316,17 @@ public class FileUtil {
 
     public static Path getFlag(String abbreviation) {
         Path countryFlagsDir = getFlagsDir().resolve(abbreviation);
-
         return countryFlagsDir.resolve(abbreviation + ".png");
     }
 
     //flagAbbreviation can also just be any other thing not only ideology yk
     public static Path getFlag(String abbreviation, String flagAbbreviation) {
         Path countryFlagsDir = getFlagsDir().resolve(abbreviation);
-        Path flag = countryFlagsDir.resolve(abbreviation + "_" + flagAbbreviation + ".png");
+        Path flag = countryFlagsDir.resolve(
+            abbreviation + "_" + flagAbbreviation + ".png"
+        );
 
-        if(Files.notExists(flag)) {
+        if (Files.notExists(flag)) {
             flag = getFlag(abbreviation);
         }
 
