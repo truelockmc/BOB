@@ -1,14 +1,155 @@
 {
-  "state_1": {
-    "name": "memel",
+  "memel": {
+    "name": "Memel",
     "x": 642,
     "y": 115,
-    "controller": "GER"
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
   },
-  "state_2": {
+  "moenigsberg": {
     "name": "koenigsberg",
     "x": 641,
     "y": 118,
-    "controller": "GER"
-  }
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "allenstein": {
+    "name": "Allenstein",
+    "x": 637,
+    "y": 121,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "danzig": {
+    "name": "Danzig",
+    "x": 631,
+    "y": 120,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "gdniya": {
+    "name": "Gdniya",
+    "x": 631,
+    "y": 121,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "hinterpommern": {
+    "name": "hinterpommern",
+    "x": 627,
+    "y": 120,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "stettin": {
+    "name": "stettin",
+    "x": 623,
+    "y": 121,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "vorpommern": {
+    "name": "vormpommern",
+    "x": 612,
+    "y": 120,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "ostmark": {
+    "name": "Ostemark",
+    "x": 621,
+    "y": 128,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "sachsen": {
+    "name": "sachsen",
+    "x": 613,
+    "y": 133,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "berlin": {
+    "name": "Berlin",
+    "x": 608,
+    "y": 129,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "posen": {
+    "name": "Posen",
+    "x": 628,
+    "y": 127,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "oberschlesien": {
+    "name": "Oberschlesien",
+    "x": 624,
+    "y": 133,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "schleswig": {
+    "name": "Schleswig-Holstein",
+    "x": 602,
+    "y": 120,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "nordschleswig": {
+    "name": "Nordschleswig",
+    "x": 600,
+    "y": 115,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "niederschlesien": {
+    "name": "Niederschlesien",
+    "x": 629,
+    "y": 135,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  },
+  "kattowitz": {
+    "name": "Kattowitz",
+    "x": 634,
+    "y": 136,
+    "controller": "GER",
+    "population": 1,
+    "civ": 1,
+    "mil": 1
+  } 
 }
