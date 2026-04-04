@@ -1,4 +1,4 @@
 [submodule "assets"]
 	path = assets
 	url = https://github.com/BattlesOfBrass/assets.git
-	branch = main
+	branch = master
